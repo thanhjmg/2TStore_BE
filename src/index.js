@@ -7,9 +7,11 @@ const EmployeeRouter = require("./routers/EmployeeRouter");
 const ProductRouter = require("./routers/ProductRouter");
 const CartItemRouter = require("./routers/CartItemRouter");
 const CustomerRouter = require("./routers/CustomerRouter");
+const CartRouter = require("./routers/CartRouter");
+const BrandRouter = require("./routers/BrandRouter");
 // Import hàm từ file employee.js
 
-const { User, Employee, Product } = require("./models");
+const { User, Employee, Product, Brand } = require("./models");
 
 const sequelize = require("./db");
 
@@ -36,7 +38,8 @@ app.use("/api", EmployeeRouter);
 app.use("/api", ProductRouter);
 app.use("/api", CartItemRouter);
 app.use("/api", CustomerRouter);
-
+app.use("/api", CartRouter);
+app.use("/api", BrandRouter);
 sequelize
   .sync({ force: false }) // `force: true` sẽ xóa và tạo lại bảng nếu đã tồn tại
   .then(() => {

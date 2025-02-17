@@ -1,4 +1,13 @@
-const { CartItem, Product, Size, Brand, Cart } = require("../models");
+const {
+  CartItem,
+  Product,
+  Size,
+  Brand,
+  Cart,
+  ProductDetail,
+  Image,
+} = require("../models");
+const { Sequelize } = require("sequelize");
 
 const CartItemController = {
   addToCartItem: async (req, res) => {
@@ -8,7 +17,7 @@ const CartItemController = {
       const cart = await Cart.findOne({
         where: { userId },
       });
-      console.log("Cart:", cart.id);
+
       const cartId = cart.id;
 
       // Kiểm tra đầu vào
@@ -42,23 +51,42 @@ const CartItemController = {
     }
   },
 
+  deleteCartItem: async (req, res) => {
+    try {
+      const { cartItemId } = req.params;
+
+      const deleteItem = await CartItem.findByPk(cartItemId);
+
+      if (!deleteItem) {
+        return res.status(404).json({ message: "Item không tồn tại" });
+      }
+      await deleteItem.destroy();
+      res.json({ message: "Xóa thành công!!" });
+    } catch (error) {
+      res.status(500).json({ message: "Lỗi", error });
+    }
+  },
+
   getCartItems: async (req, res) => {
     try {
       const cartItems = await CartItem.findAll({
         where: { cartId: req.params.cartId }, // Lấy giỏ hàng theo ID người dùng
+
         include: [
           {
-            model: Product,
-
-            include: [{ model: Brand }],
-          },
-          {
-            model: Size,
+            model: ProductDetail,
+            include: [
+              {
+                model: Size,
+              },
+            ],
           },
         ],
       });
 
-      res.status(200).json(cartItems);
+      // Duyệt qua các cartItems và lọc ProductDetail trong Size theo productId
+
+      res.status(200).json(cartItems); // Trả về kết quả đã lọc
     } catch (error) {
       console.error("Error fetching cart items:", error);
       res.status(500).json({

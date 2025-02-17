@@ -7,5 +7,10 @@ const cartItemController = require("../controllers/CartItemController");
 
 router.get("/cartitem/:cartId", verifyToken, cartItemController.getCartItems);
 router.post("/cartitem/add", verifyToken, cartItemController.addToCartItem);
+router.delete(
+  "/cartitem/:cartItemId",
+  verifyToken,
+  cartItemController.deleteCartItem
+);
 
 module.exports = router;

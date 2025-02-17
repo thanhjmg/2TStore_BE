@@ -10,6 +10,7 @@ const CartItem = require("./CartItem");
 const Customer = require("./Customer");
 const Invoice = require("./Invoice");
 const InvoiceItem = require("./InvoiceItem");
+const ProductType = require("./ProductType");
 
 // Thiết lập quan hệ 1-1 giữa User và Employee
 Employee.hasOne(User, { foreignKey: "employeeId" }); // 1 Nhân viên có 1 tài khoản
@@ -25,6 +26,9 @@ Image.belongsTo(Product, { foreignKey: "productId" });
 Product.hasMany(ProductDetail, { foreignKey: "productId" });
 ProductDetail.belongsTo(Product, { foreignKey: "productId" });
 
+Product.belongsTo(ProductType, { foreignKey: "productTypeId" }); // Mỗi sản phẩm thuộc một brand
+ProductType.hasMany(Product, { foreignKey: "productTypeId" });
+
 // Size Model
 Size.hasMany(ProductDetail, { foreignKey: "sizeId" });
 ProductDetail.belongsTo(Size, { foreignKey: "sizeId" });
@@ -34,11 +38,7 @@ CartItem.belongsTo(Cart, { foreignKey: "cartId" });
 Customer.hasOne(Cart, { foreignKey: "customerId" });
 Cart.belongsTo(Customer, { foreignKey: "customerId" });
 
-Product.hasMany(CartItem, { foreignKey: "productId" });
-CartItem.belongsTo(Product, { foreignKey: "productId" });
-
-Size.hasMany(CartItem, { foreignKey: "sizeId" });
-CartItem.belongsTo(Size, { foreignKey: "sizeId" });
+CartItem.belongsTo(ProductDetail, { foreignKey: "productDetailId" });
 
 Invoice.belongsTo(User, { foreignKey: "userId" });
 Invoice.hasMany(InvoiceItem, { foreignKey: "invoiceId" });
@@ -59,4 +59,5 @@ module.exports = {
   InvoiceItem,
   Customer,
   Cart,
+  ProductType,
 };

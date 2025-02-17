@@ -1,18 +1,18 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 
-const Brand = sequelize.define(
-  "Brand",
+const ProductType = sequelize.define(
+  "ProductType",
   {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true, // Đặt id là khóa chính
+      primaryKey: true,
       autoIncrement: true,
     },
     name: {
       type: DataTypes.STRING,
-      // allowNull: false,
+      allowNull: false,
     },
     slug: {
       type: DataTypes.STRING,
@@ -20,7 +20,7 @@ const Brand = sequelize.define(
   },
   {
     timestamps: true,
-    tableName: "brand",
+    tableName: "productType",
   }
 );
-module.exports = Brand;
+module.exports = ProductType;
