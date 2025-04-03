@@ -18,14 +18,7 @@ const ProductDetail = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    purchase_price: {
-      type: DataTypes.FLOAT,
-      allowNull: null,
-    },
-    selling_price: {
-      type: DataTypes.FLOAT,
-      allowNull: null,
-    },
+
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: true,

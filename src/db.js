@@ -8,6 +8,12 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST,
     dialect: "postgres",
+    pool: {
+      max: 10, // Tăng số kết nối tối đa
+      min: 0,
+      acquire: 60000, // Tăng thời gian chờ (mặc định 10000ms = 10s)
+      idle: 10000,
+    },
   }
 );
 

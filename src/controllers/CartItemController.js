@@ -51,6 +51,27 @@ const CartItemController = {
     }
   },
 
+  updateQuantityItem: async (req, res) => {
+    try {
+      const { id, quantity } = req.body;
+      const checkItemCart = await CartItem.findByPk(id);
+      if (!checkItemCart) {
+        return res
+          .status(404)
+          .json({ message: "Sản phẩm không tồn tại trong giỏ hàng" });
+      } else {
+        checkItemCart.quantity = quantity;
+        checkItemCart.save();
+        return res
+          .status(200)
+          .json({ message: "Cập nhật số lượng thành công" });
+      }
+    } catch (error) {
+      console.error("Lỗi cập nhật số lượng:", error);
+      return res.status(500).json({ message: "Lỗi server" });
+    }
+  },
+
   deleteCartItem: async (req, res) => {
     try {
       const { cartItemId } = req.params;

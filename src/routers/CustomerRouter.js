@@ -16,4 +16,11 @@ router.get(
   customerController.getCustomerById
 );
 
+router.put(
+  "/updateCustomer/:id",
+  verifyToken,
+  isCustomer,
+  customerController.updateCustomerById
+);
+
 module.exports = router;

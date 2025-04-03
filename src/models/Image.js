@@ -11,8 +11,11 @@ const Image = sequelize.define(
       autoIncrement: true,
     },
     url: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
+    },
+    type: {
+      type: DataTypes.STRING,
     },
   },
   {

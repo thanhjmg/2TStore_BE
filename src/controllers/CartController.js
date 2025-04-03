@@ -1,4 +1,5 @@
-const { where } = require("sequelize");
+const { Op, Sequelize, literal } = require("sequelize");
+const sequelize = require("../db");
 const {
   Cart,
   CartItem,
@@ -11,15 +12,13 @@ const {
 const CartController = {
   addProductToCart: async (req, res) => {
     try {
-      const { quantity, cartId, productDetailId } = req.body;
+      const { quantity, cartId, productId, sizeId } = req.body;
 
       // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-      console.log("pppp", productDetailId);
 
       const existingItem = await CartItem.findOne({
-        where: { cartId, productDetailId },
+        where: { cartId, productId, sizeId },
       });
-     
 
       if (existingItem) {
         // Nếu sản phẩm đã tồn tại, cập nhật quantity
@@ -36,7 +35,8 @@ const CartController = {
       const newItem = new CartItem({
         quantity,
         cartId,
-        productDetailId,
+        productId,
+        sizeId,
       });
 
       await newItem.save();
@@ -51,40 +51,47 @@ const CartController = {
 
   getCartById: async (req, res) => {
     try {
-      const { customerId } = req.params; // Lấy ID từ params của request
+      const { customerId } = req.params;
+
       const cart = await Cart.findOne({
         where: { customerId },
-        include: {
-          model: CartItem,
-          include: [
-            {
-              model: ProductDetail,
-              include: [
-                {
-                  model: Size,
-                },
-                {
-                  model: Product,
-                  include: [
-                    {
-                      model: Image,
+        include: [
+          {
+            model: CartItem,
+            as: "CartItems",
+            include: [
+              {
+                model: Product,
+                include: [
+                  { model: Image },
+                  {
+                    model: ProductDetail,
+                    required: false,
+                    where: {
+                      sizeId: { [Op.col]: "CartItems.sizeId" }, // Sử dụng Op.col để tham chiếu đến sizeId của CartItem
                     },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
+                  },
+                ],
+              },
+              {
+                model: Size,
+              },
+            ],
+          },
+        ],
+        order: [["CartItems", "createdAt", "DESC"]],
       });
 
       if (!cart) {
         return res.status(404).json({ message: "Cart not found" });
       }
 
-      res.status(200).json(cart); // Trả về dữ liệu Cart cùng CartItem
+      res.status(200).json(cart);
     } catch (error) {
       console.error("Error fetching cart:", error);
-      res.status(500).json({ message: "Internal Server Error" });
+      res
+        .status(500)
+        .json({ message: "Internal Server Error", error: error.message });
     }
   },
 };

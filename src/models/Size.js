@@ -14,10 +14,6 @@ const Size = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    productType: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
   },
   {
     tableName: "size",

@@ -1,7 +1,9 @@
 const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
+  console.log("token:", req.headers.authorization);
   const token = req.headers.authorization.split(" ")[1]; // Lấy token từ header
+
   if (!token) {
     return res.status(403).json("Access Denied");
   }
@@ -15,8 +17,8 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-const isManager = (req, res, next) => {
-  if (req.user.role !== "manager") {
+const isEmployee = (req, res, next) => {
+  if (req.user.role !== "employee" && req.user.role !== "manager") {
     return res
       .status(403)
       .json("You do not have permission to perform this action");
@@ -33,4 +35,13 @@ const isCustomer = (req, res, next) => {
   next();
 };
 
-module.exports = { verifyToken, isManager, isCustomer };
+const isManager = (req, res, next) => {
+  if (req.user.role !== "manager") {
+    return res
+      .status(403)
+      .json("You do not have permission to perform this action");
+  }
+  next();
+};
+
+module.exports = { verifyToken, isEmployee, isCustomer, isManager };

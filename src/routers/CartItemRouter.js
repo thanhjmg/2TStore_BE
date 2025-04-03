@@ -13,4 +13,10 @@ router.delete(
   cartItemController.deleteCartItem
 );
 
+router.put(
+  "/cartItem/updatequantity",
+  verifyToken,
+  cartItemController.updateQuantityItem
+);
+
 module.exports = router;
